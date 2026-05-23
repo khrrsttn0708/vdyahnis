@@ -429,11 +429,16 @@ function LoginScreen({ onLogin, showToast }) {
 
         <div className="field-group">
           <label className="field-label">Логін</label>
-          <input className="field-input" placeholder="Ім'я користувача" value={username} onChange={e => setUsername(e.target.value)} onKeyDown={e => e.key === "Enter" && handleLogin()} />
+          <input className="field-input" placeholder="ім'я користувача" value={username} onChange={e => setUsername(e.target.value)} onKeyDown={e => e.key === "Enter" && handleLogin()} />
         </div>
         <div className="field-group">
           <label className="field-label">Пароль</label>
           <input className="field-input" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleLogin()} />
+          {mode === "register" && (
+            <p style={{ fontSize:11, color:"var(--muted)", marginTop:6, fontWeight:600, lineHeight:1.5 }}>
+              Мінімум 8 символів · велика і мала літера · цифра · спецсимвол (!@#$%^&*)
+            </p>
+          )}
         </div>
         {mode === "register" && (
           <div className="field-group">
@@ -446,7 +451,6 @@ function LoginScreen({ onLogin, showToast }) {
         <button className="btn-primary" onClick={mode === "login" ? handleLogin : handleRegister}>
           {mode === "login" ? "Увійти" : "Зареєструватися"}
         </button>
-        {mode === "register" && <p className="hint-text">Мін. 8 символів · велика і мала літера · цифра · спецсимвол</p>}
       </div>
     </div>
   );
