@@ -683,9 +683,7 @@ function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
   const [color, setColor]     = useState("Будь-який");
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const userLooks = looks
-    .filter(l => l.user_id === currentUser.id)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const userLooks = [...looks].sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
 
   const getItems = (type, sArr, st) => userClothes.filter(c =>
     c.type === type &&
@@ -797,7 +795,7 @@ function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
             </div>
             {look.items.some(i => i.photo) && (
               <div style={{ display:"flex", gap:6, padding:"10px 16px 0", overflowX:"auto" }}>
-                {look.items.filter(i => i.photo).map(i => (
+                {look.items?.filter(i => i.photo).map(i => (
                   <img key={i.id} src={i.photo} alt={i.type} style={{ width:58, height:58, borderRadius:10, objectFit:"cover", flexShrink:0 }} />
                 ))}
               </div>
@@ -813,7 +811,7 @@ function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
             </div>
             <div className="look-body">
               <div className="look-desc">
-                {look.items.map(i => `${i.type}: ${i.color}, ${Array.isArray(i.style) ? i.style.join("/") : i.style}, ${i.season}`).join(" · ")}
+                {(look.items || []).map(i => `${i.type}: ${i.color}, ${Array.isArray(i.style) ? i.style.join("/") : i.style}, ${i.season}`).join(" · ")}
               </div>
             </div>
           </div>
@@ -826,7 +824,7 @@ function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
             <div className="modal-handle" />
             <div className="modal-title">Видалити образ?</div>
             <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginBottom:20 }}>
-              {deleteTarget.items.map(i => (
+              {(deleteTarget.items || []).map(i => (
                 <div key={i.id} className="look-item-chip">
                   <div className="look-type-tag">{TYPE_ABBR[i.type]}</div>
                   {i.type}
