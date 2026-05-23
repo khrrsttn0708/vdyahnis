@@ -454,8 +454,7 @@ function LoginScreen({ onLogin, showToast }) {
 
 function AddClothingTab({ currentUser, clothes, setClothes, showToast }) {
   const [type, setType]       = useState("Верх");
-  const [styles, setStyles]   = useState(["Універсальний"]);
-  const [styleOpen, setStyleOpen] = useState(false);
+  const [styleV, setStyle]    = useState("Університальний");
   const [season, setSeason]   = useState("Літо");
   const [color, setColor]     = useState("Білий");
   const [photo, setPhoto]     = useState(null);
@@ -474,7 +473,7 @@ function AddClothingTab({ currentUser, clothes, setClothes, showToast }) {
   const save = async () => {
     const newItem = {
       user_id: currentUser.id,
-      type, style: styles, season, color,
+      type, style: styleV, season, color,
       photo: photo || null,
     };
     const { data, error } = await supabase.from("clothes").insert([newItem]).select().single();
@@ -516,40 +515,9 @@ function AddClothingTab({ currentUser, clothes, setClothes, showToast }) {
         <div className="row">
           <div className="field-group">
             <label className="field-label">Стиль</label>
-            <div className="style-dropdown">
-              <button
-                className={"style-dropdown-trigger" + (styleOpen ? " open" : "")}
-                onClick={() => setStyleOpen(o => !o)}
-                type="button"
-              >
-                <span>{styles.join(", ")}</span>
-                <svg className="style-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                  <path d="M1 1l5 5 5-5" stroke="#FF9EBB" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </button>
-              {styleOpen && (
-                <div className="style-checkboxes">
-                  {STYLES.map(s => (
-                    <button key={s}
-                      className={"style-check" + (styles.includes(s) ? " checked" : "")}
-                      onClick={() => setStyles(prev =>
-                        prev.includes(s)
-                          ? prev.length > 1 ? prev.filter(x => x !== s) : prev
-                          : [...prev, s]
-                      )}>
-                      <span>{s}</span>
-                      <span className="style-check-box">
-                        {styles.includes(s) && (
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        )}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <select className="field-select" value={styleV} onChange={e => setStyle(e.target.value)}>
+              {STYLES.map(s => <option key={s}>{s}</option>)}
+            </select>
           </div>
           <div className="field-group">
             <label className="field-label">Колір</label>
@@ -571,15 +539,14 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
 
   // edit fields
   const [editType, setEditType]     = useState("");
-  const [editStyle, setEditStyle]   = useState([]);
-  const [editStyleOpen, setEditStyleOpen] = useState(false);
+  const [editStyle, setEditStyle]   = useState("Університальний");
   const [editSeason, setEditSeason] = useState("");
   const [editColor, setEditColor]   = useState("");
 
   const openEdit = (item) => {
     setEditTarget(item);
     setEditType(item.type);
-    setEditStyle(Array.isArray(item.style) ? item.style : [item.style]);
+    setEditStyle(Array.isArray(item.style) ? item.style[0] : item.style);
     setEditSeason(item.season);
     setEditColor(item.color);
   };
@@ -661,7 +628,7 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
               </div>
               <div className="item-info">
                 <div className="item-type">{editType}</div>
-                <div className="item-meta"><ColorDot color={editColor} />{editColor} · {Array.isArray(editStyle) ? editStyle.join(", ") : editStyle}</div>
+                <div className="item-meta"><ColorDot color={editColor} />{editColor} · {editStyle}</div>
                 <div className="item-meta" style={{ marginTop: 2 }}>{editSeason}</div>
               </div>
             </div>
@@ -684,40 +651,9 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
             <div className="row">
               <div className="field-group">
                 <label className="field-label">Стиль</label>
-                <div className="style-dropdown">
-                  <button
-                    className={"style-dropdown-trigger" + (editStyleOpen ? " open" : "")}
-                    onClick={() => setEditStyleOpen(o => !o)}
-                    type="button"
-                  >
-                    <span>{editStyle.join(", ") || "Стиль"}</span>
-                    <svg className="style-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                      <path d="M1 1l5 5 5-5" stroke="#FF9EBB" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                  </button>
-                  {editStyleOpen && (
-                    <div className="style-checkboxes">
-                      {STYLES.map(s => (
-                        <button key={s}
-                          className={"style-check" + (editStyle.includes(s) ? " checked" : "")}
-                          onClick={() => setEditStyle(prev =>
-                            prev.includes(s)
-                              ? prev.length > 1 ? prev.filter(x => x !== s) : prev
-                              : [...prev, s]
-                          )}>
-                          <span>{s}</span>
-                          <span className="style-check-box">
-                            {editStyle.includes(s) && (
-                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                            )}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <select className="field-select" value={editStyle} onChange={e => setEditStyle(e.target.value)}>
+                  {STYLES.map(s => <option key={s}>{s}</option>)}
+                </select>
               </div>
               <div className="field-group">
                 <label className="field-label">Колір</label>
@@ -742,11 +678,9 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
 }
 
 function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
-  const [seasons, setSeasons]   = useState(["Будь-який"]);
-  const [styleV, setStyle]      = useState("Будь-який");
-  const [colors, setColors]     = useState(["Будь-який"]);
-  const [seasonOpen, setSeasonOpen] = useState(false);
-  const [colorOpen, setColorOpen]   = useState(false);
+  const [season, setSeason]   = useState("Будь-який");
+  const [styleV, setStyle]    = useState("Будь-який");
+  const [color, setColor]     = useState("Будь-який");
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const userLooks = looks
@@ -759,47 +693,44 @@ function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
     (st === "Будь-який" || (Array.isArray(c.style) ? c.style.includes(st) || c.style.includes("Універсальний") : c.style === st || c.style === "Універсальний"))
   );
 
-  const preferred = (items, colArr, used = []) => {
+  const preferred = (items, col, used = []) => {
     if (!items.length) return null;
     const hasMulti = used.some(i => i.color === "Різнокольоровий");
     let pool = hasMulti ? (items.filter(i => i.color !== "Різнокольоровий") || items) : items;
     if (!pool.length) pool = items;
-    if (!colArr.includes("Будь-який")) {
-      const p = pool.filter(i => colArr.includes(i.color));
-      if (p.length) return p[Math.floor(Math.random() * p.length)];
-    }
+    if (col !== "Будь-який") { const p = pool.filter(i => i.color === col); if (p.length) return p[Math.floor(Math.random() * p.length)]; }
     return pool[Math.floor(Math.random() * pool.length)];
   };
 
   const generate = async () => {
-    const tops    = getItems("Верх",     seasons, styleV);
-    const bottoms = getItems("Низ",      seasons, styleV);
-    const shoes   = getItems("Взуття",   seasons, styleV);
-    const jackets = getItems("Куртка",   seasons, styleV);
-    const dresses = getItems("Плаття",   seasons, styleV);
-    const accs    = getItems("Аксесуар", seasons, styleV);
-    const bags    = getItems("Сумка",    seasons, styleV);
+    const tops    = getItems("Верх",     season, styleV);
+    const bottoms = getItems("Низ",      season, styleV);
+    const shoes   = getItems("Взуття",   season, styleV);
+    const jackets = getItems("Куртка",   season, styleV);
+    const dresses = getItems("Плаття",   season, styleV);
+    const accs    = getItems("Аксесуар", season, styleV);
+    const bags    = getItems("Сумка",    season, styleV);
 
     if (!shoes.length) { showToast("Для образу потрібне взуття", "error"); return; }
-    if (!seasons.includes("Будь-який") && (seasons.includes("Зима") || seasons.includes("Демісезон")) && !jackets.length) { showToast("Для обраних сезонів потрібна куртка", "error"); return; }
+    if (["Зима","Демісезон"].includes(season) && !jackets.length) { showToast(`Для сезону «${season}» потрібна куртка`, "error"); return; }
     const canOne = dresses.length > 0;
     const canTwo = tops.length > 0 && bottoms.length > 0;
     if (!canOne && !canTwo) { showToast("Додай плаття або комплект верх + низ", "error"); return; }
 
     let items = [];
     if (canOne && (!canTwo || Math.random() > 0.5)) {
-      const d = preferred(dresses, colors); if (d) items.push(d);
+      const d = preferred(dresses, color); if (d) items.push(d);
     } else {
-      const t = preferred(tops, colors);
-      const b = preferred(bottoms, colors, t ? [t] : []);
+      const t = preferred(tops, color);
+      const b = preferred(bottoms, color, t ? [t] : []);
       if (t) items.push(t); if (b) items.push(b);
     }
-    const sh = preferred(shoes, colors, items); if (sh) items.push(sh);
-    if (!seasons.includes("Будь-який") && (seasons.includes("Зима") || seasons.includes("Демісезон"))) { const j = preferred(jackets, colors, items); if (j) items.push(j); }
-    if (!colors.includes("Будь-який") && items.filter(i => i.color === "Різнокольоровий").length > 1) { showToast("В образі не можна 2+ різнокольорових речі", "error"); return; }
+    const s = preferred(shoes, color, items); if (s) items.push(s);
+    if (["Зима","Демісезон"].includes(season)) { const j = preferred(jackets, color, items); if (j) items.push(j); }
+    if (items.filter(i => i.color === "Різнокольоровий").length > 1) { showToast("В образі не можна 2+ різнокольорових речі", "error"); return; }
     const accCount = Math.min(Math.floor(Math.random() * 3), accs.length);
-    for (let i = 0; i < accCount; i++) { const a = preferred(accs, colors, items); if (a && !items.includes(a)) items.push(a); }
-    if (bags.length && Math.random() > 0.5) { const bg = preferred(bags, colors, items); if (bg) items.push(bg); }
+    for (let i = 0; i < accCount; i++) { const a = preferred(accs, color, items); if (a && !items.includes(a)) items.push(a); }
+    if (bags.length && Math.random() > 0.5) { const bg = preferred(bags, color, items); if (bg) items.push(bg); }
 
     const newLook = {
       user_id: currentUser.id,
@@ -829,32 +760,9 @@ function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
         <div className="row">
           <div className="field-group">
             <label className="field-label">Сезон</label>
-            <div className="style-dropdown">
-              <button className={"style-dropdown-trigger" + (seasonOpen ? " open" : "")} onClick={() => setSeasonOpen(o => !o)} type="button">
-                <span>{seasons.join(", ")}</span>
-                <svg className="style-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#FF9EBB" strokeWidth="2" strokeLinecap="round"/></svg>
-              </button>
-              {seasonOpen && (
-                <div className="style-checkboxes">
-                  {["Будь-який",...SEASONS].map(s => (
-                    <button key={s}
-                      className={"style-check" + (seasons.includes(s) ? " checked" : "")}
-                      onClick={() => {
-                        if (s === "Будь-який") { setSeasons(["Будь-який"]); return; }
-                        setSeasons(prev => {
-                          const without = prev.filter(x => x !== "Будь-який");
-                          return without.includes(s)
-                            ? without.length > 1 ? without.filter(x => x !== s) : ["Будь-який"]
-                            : [...without, s];
-                        });
-                      }}>
-                      <span>{s}</span>
-                      <span className="style-check-box">{seasons.includes(s) && <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <select className="field-select" value={season} onChange={e => setSeason(e.target.value)}>
+              {["Будь-який",...SEASONS].map(s => <option key={s}>{s}</option>)}
+            </select>
           </div>
           <div className="field-group">
             <label className="field-label">Стиль</label>
@@ -865,35 +773,9 @@ function LooksTab({ userClothes, looks, setLooks, currentUser, showToast }) {
         </div>
         <div className="field-group">
           <label className="field-label">Пріоритетний колір</label>
-          <div className="style-dropdown">
-            <button className={"style-dropdown-trigger" + (colorOpen ? " open" : "")} onClick={() => setColorOpen(o => !o)} type="button">
-              <span>{colors.join(", ")}</span>
-              <svg className="style-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#FF9EBB" strokeWidth="2" strokeLinecap="round"/></svg>
-            </button>
-            {colorOpen && (
-              <div className="style-checkboxes">
-                {["Будь-який",...COLORS].map(cl => (
-                  <button key={cl}
-                    className={"style-check" + (colors.includes(cl) ? " checked" : "")}
-                    onClick={() => {
-                      if (cl === "Будь-який") { setColors(["Будь-який"]); return; }
-                      setColors(prev => {
-                        const without = prev.filter(x => x !== "Будь-який");
-                        return without.includes(cl)
-                          ? without.length > 1 ? without.filter(x => x !== cl) : ["Будь-який"]
-                          : [...without, cl];
-                      });
-                    }}>
-                    <span style={{ display:"flex", alignItems:"center", gap:6 }}>
-                      <span className="color-dot" style={COLOR_MAP[cl]?.startsWith("linear") ? { background: COLOR_MAP[cl] } : { background: COLOR_MAP[cl] || "#ccc" }} />
-                      {cl}
-                    </span>
-                    <span className="style-check-box">{colors.includes(cl) && <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <select className="field-select" value={color} onChange={e => setColor(e.target.value)}>
+            {["Будь-який",...COLORS].map(c => <option key={c}>{c}</option>)}
+          </select>
         </div>
         <button className="btn-primary" onClick={generate}>Згенерувати образ</button>
       </div>
