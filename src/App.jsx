@@ -429,7 +429,7 @@ function LoginScreen({ onLogin, showToast }) {
 
         <div className="field-group">
           <label className="field-label">Логін</label>
-          <input className="field-input" placeholder="ім'я користувача" value={username} onChange={e => setUsername(e.target.value)} onKeyDown={e => e.key === "Enter" && handleLogin()} />
+          <input className="field-input" placeholder="Ім'я користувача" value={username} onChange={e => setUsername(e.target.value)} onKeyDown={e => e.key === "Enter" && handleLogin()} />
         </div>
         <div className="field-group">
           <label className="field-label">Пароль</label>
