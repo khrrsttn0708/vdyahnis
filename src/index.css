@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --p50: #FDF4F7;
+  --p100: #F2DCEA;
+  --p200: #FFE9EF;
+  --p300: #FFC9D7;
+  --p400: #FFBCCD;
+  --p500: #FF9CB5;
+  --rose: #F9EDF3;
+  --bg: #FAF6F8;
+  --card: #FFFFFF;
+  --text: #2A1F26;
+  --muted: #9C7A8E;
+  --border: rgba(158, 90, 126, 0.14);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 2px 14px rgba(158, 90, 126, 0.09);
+}
+
+/* --- СТИЛІ ДЛЯ ВЕЛИКОГО ЛОГОТИПА НА ФОНІ (ЗАМІНІТЬ ПОПЕРЕДНІ) --- */
+
+/* 1. Головний фон сторінки (рожевий градієнт, як у image_8.png) */
+/* (Цей блок можна додати, якщо у вас ще немає стилів для body) */
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFEBEB 0%, #FFFFFF 100%);
+}
+
+/* 2. Контейнер для великого логотипа */
+.large-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px; /* Відступ до заголовка */
+}
+
+/* 3. Стилі для великого зображення логотипа */
+.large-logo-img {
+  /* Ця магія перетворює ваш блідо-рожевий логотип на чіткий білий! */
+  filter: invert(1) brightness(0);
+  
+  /* ТУТ МИ ЗБІЛЬШУЄМО МАСШТАБ! */
+  width: 150px; /* Наприклад, 150px, або навіть 180px, щоб він був великим */
+  height: auto; /* Зберігає пропорції */
+  opacity: 0.9; /* Трохи прозорості для м'якості */
+}
