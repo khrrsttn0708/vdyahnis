@@ -594,7 +594,7 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
   return (
     <div>
       <div className="section-title">Мій гардероб</div>
-      <div className="section-sub">{userClothes.length} речей у гардеробі</div>
+      <div className="section-sub">{userClothes.length} речей у гардеробі · id: {userClothes[0]?.user_id?.slice(0,8) || "—"}</div>
 
       <div className="scroll-hint">
         {["Всі", ...CLOTHING_TYPES].map(t => (
