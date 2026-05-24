@@ -287,6 +287,25 @@ export default function App() {
         else setClothes([]);
         if (l.data) setLooks(l.data);
         else setLooks([]);
+
+        // Завантажуємо фото окремо невеликими порціями
+        if (c.data && c.data.length > 0) {
+          const ids = c.data.map(item => item.id);
+          const chunkSize = 20;
+          for (let i = 0; i < ids.length; i += chunkSize) {
+            const chunk = ids.slice(i, i + chunkSize);
+            const { data: photos } = await supabase
+              .from("clothes")
+              .select("id, photo")
+              .in("id", chunk);
+            if (photos) {
+              setClothes(prev => prev.map(item => {
+                const found = photos.find(p => p.id === item.id);
+                return found ? { ...item, photo: found.photo } : item;
+              }));
+            }
+          }
+        }
       } catch(e) {
         console.error("Load error:", e);
       } finally {
