@@ -281,7 +281,10 @@ export default function App() {
     ]).then(([c, l]) => {
       if (c.data) setClothes(c.data);
       if (l.data) setLooks(l.data);
-    }).finally(() => setLoading(false));
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
   }, [currentUser]);
 
   const handleLogin = (u) => {
