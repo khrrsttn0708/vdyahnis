@@ -327,10 +327,9 @@ export default function App() {
         </div>
 
         <div className="content">
-          {loading && <div style={{ textAlign:"center", padding:40, color:"var(--muted)", fontWeight:700 }}>Завантаження...</div>}
-          {!loading && tab === "add"      && <AddClothingTab currentUser={currentUser} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
-          {!loading && tab === "wardrobe" && <WardrobeTab userClothes={clothes} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
-          {!loading && tab === "looks"    && <LooksTab userClothes={clothes} looks={looks} setLooks={setLooks} currentUser={currentUser} showToast={showToast} />}
+          {tab === "add"      && <AddClothingTab currentUser={currentUser} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
+          {tab === "wardrobe" && <WardrobeTab userClothes={clothes} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
+          {tab === "looks"    && <LooksTab userClothes={clothes} looks={looks} setLooks={setLooks} currentUser={currentUser} showToast={showToast} />}
         </div>
 
         <nav className="tab-bar">
