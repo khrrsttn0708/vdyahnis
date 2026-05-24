@@ -281,8 +281,12 @@ export default function App() {
           supabase.from("clothes").select("*").eq("user_id", currentUser.id),
           supabase.from("looks").select("*").eq("user_id", currentUser.id),
         ]);
+        if (c.error) console.error("Clothes error:", c.error);
+        if (l.error) console.error("Looks error:", l.error);
         if (c.data) setClothes(c.data);
+        else setClothes([]);
         if (l.data) setLooks(l.data);
+        else setLooks([]);
       } catch(e) {
         console.error("Load error:", e);
       } finally {
@@ -590,7 +594,7 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
   return (
     <div>
       <div className="section-title">Мій гардероб</div>
-      <div className="section-sub">{userClothes.length} речей у гардеробі</div>
+      <div className="section-sub">{userClothes.length} речей у гардеробі · id: {userClothes[0]?.user_id?.slice(0,8) || "—"}</div>
 
       <div className="scroll-hint">
         {["Всі", ...CLOTHING_TYPES].map(t => (
