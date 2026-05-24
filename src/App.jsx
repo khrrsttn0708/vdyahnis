@@ -275,17 +275,22 @@ export default function App() {
   useEffect(() => {
     if (!currentUser) return;
     setLoading(true);
-    Promise.all([
-      supabase.from("clothes").select("*").eq("user_id", currentUser.id).order("created_at", { ascending: false }),
-      supabase.from("looks").select("*").eq("user_id", currentUser.id).order("created_at", { ascending: false }),
-    ]).then(([c, l]) => {
-      if (c.data) setClothes(c.data);
-      if (l.data) setLooks(l.data);
-      setLoading(false);
-    }).catch(() => {
-      setLoading(false);
-    });
-  }, [currentUser]);
+    const loadData = async () => {
+      try {
+        const [c, l] = await Promise.all([
+          supabase.from("clothes").select("*").eq("user_id", currentUser.id),
+          supabase.from("looks").select("*").eq("user_id", currentUser.id),
+        ]);
+        if (c.data) setClothes(c.data);
+        if (l.data) setLooks(l.data);
+      } catch(e) {
+        console.error("Load error:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [currentUser?.id]);
 
   const handleLogin = (u) => {
     setCurrentUser(u);
@@ -327,9 +332,10 @@ export default function App() {
         </div>
 
         <div className="content">
-          {tab === "add"      && <AddClothingTab currentUser={currentUser} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
-          {tab === "wardrobe" && <WardrobeTab userClothes={clothes} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
-          {tab === "looks"    && <LooksTab userClothes={clothes} looks={looks} setLooks={setLooks} currentUser={currentUser} showToast={showToast} />}
+          {loading && <div style={{ textAlign:"center", padding:40, color:"var(--muted)", fontWeight:700 }}>Завантаження...</div>}
+          {!loading && tab === "add"      && <AddClothingTab currentUser={currentUser} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
+          {!loading && tab === "wardrobe" && <WardrobeTab userClothes={clothes} clothes={clothes} setClothes={setClothes} showToast={showToast} />}
+          {!loading && tab === "looks"    && <LooksTab userClothes={clothes} looks={looks} setLooks={setLooks} currentUser={currentUser} showToast={showToast} />}
         </div>
 
         <nav className="tab-bar">
