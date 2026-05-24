@@ -278,7 +278,7 @@ export default function App() {
     const loadData = async () => {
       try {
         const [c, l] = await Promise.all([
-          supabase.from("clothes").select("*").eq("user_id", currentUser.id),
+          supabase.from("clothes").select("id, user_id, type, style, season, color, created_at").eq("user_id", currentUser.id),
           supabase.from("looks").select("*").eq("user_id", currentUser.id),
         ]);
         if (c.error) console.error("Clothes error:", c.error);
