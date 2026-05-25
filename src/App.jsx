@@ -120,14 +120,15 @@ const css = `
   .photo-zone-hint { font-size:12px; color:#FF9EBB; margin-top:4px; font-weight:700; }
   .photo-zone img { max-width:100%; max-height:180px; border-radius:var(--radius-sm); object-fit:cover; }
 
-  .item-card { background:var(--card); border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow); padding:14px; display:flex; align-items:center; gap:14px; margin-bottom:10px; transition:transform 0.15s; cursor:pointer; }
-  .item-card:hover { transform:scale(1.005); }
-  .item-card:active { transform:scale(0.99); }
-  .item-thumb { width:110px; height:110px; border-radius:var(--radius-sm); flex-shrink:0; background:#FFF0F4; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:#FF9EBB; overflow:hidden; }
-  .item-thumb img { width:110px; height:110px; object-fit:cover; display:block; }
-  .item-info { flex:1; min-width:0; }
-  .item-type { font-size:16px; font-weight:800; color:#2A1520; }
-  .item-meta { font-size:12px; color:var(--muted); font-weight:600; margin-top:3px; display:flex; align-items:center; gap:4px; }
+  .wardrobe-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px; }
+  .item-card { background:var(--card); border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow); padding:10px; display:flex; flex-direction:column; align-items:center; gap:8px; transition:transform 0.15s; cursor:pointer; }
+  .item-card:hover { transform:scale(1.02); }
+  .item-card:active { transform:scale(0.98); }
+  .item-thumb { width:100%; aspect-ratio:1; border-radius:var(--radius-sm); background:#FFF0F4; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; color:#FF9EBB; overflow:hidden; }
+  .item-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+  .item-info { width:100%; text-align:center; }
+  .item-type { font-size:14px; font-weight:800; color:#2A1520; }
+  .item-meta { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap; }
   .color-dot { display:inline-block; width:10px; height:10px; border-radius:50%; border:1px solid rgba(0,0,0,0.08); flex-shrink:0; }
 
   .scroll-hint { display:flex; gap:8px; flex-wrap:wrap; padding-bottom:4px; margin-bottom:10px; }
@@ -633,22 +634,20 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
           <div className="empty-state-sub">Додай перший одяг на вкладці «Додати»</div>
         </div>
       ) : (
-        filtered.map(item => (
-          <div key={item.id} className="item-card" onClick={() => openEdit(item)}>
-            <div className="item-thumb">
-              {item.photo ? <img src={item.photo} alt={item.type} /> : TYPE_ABBR[item.type]}
+        <div className="wardrobe-grid">
+          {filtered.map(item => (
+            <div key={item.id} className="item-card" onClick={() => openEdit(item)}>
+              <div className="item-thumb">
+                {item.photo ? <img src={item.photo} alt={item.type} /> : TYPE_ABBR[item.type]}
+              </div>
+              <div className="item-info">
+                <div className="item-type">{item.type}</div>
+                <div className="item-meta"><ColorDot color={item.color} />{item.color}</div>
+                <div className="item-meta">{item.season}</div>
+              </div>
             </div>
-            <div className="item-info">
-              <div className="item-type">{item.type}</div>
-              <div className="item-meta"><ColorDot color={item.color} />{item.color} · {Array.isArray(item.style) ? item.style.join(", ") : item.style}</div>
-              <div className="item-meta" style={{ marginTop: 2 }}>{item.season}</div>
-            </div>
-            <svg viewBox="0 0 24 24" style={{ width:16, height:16, stroke:"#FF9EBB", fill:"none", strokeWidth:2, strokeLinecap:"round", strokeLinejoin:"round", flexShrink:0 }}>
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </div>
-        ))
+          ))}
+        </div>
       )}
 
       {editTarget && (
