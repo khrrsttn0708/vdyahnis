@@ -123,8 +123,8 @@ const css = `
   .item-card { background:var(--card); border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow); padding:14px; display:flex; align-items:center; gap:14px; margin-bottom:10px; transition:transform 0.15s; cursor:pointer; }
   .item-card:hover { transform:scale(1.005); }
   .item-card:active { transform:scale(0.99); }
-  .item-thumb { width:70px; height:70px; border-radius:var(--radius-sm); flex-shrink:0; background:#FFF0F4; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#FF9EBB; overflow:hidden; }
-  .item-thumb img { width:70px; height:70px; object-fit:cover; display:block; }
+  .item-thumb { width:90px; height:90px; border-radius:var(--radius-sm); flex-shrink:0; background:#FFF0F4; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#FF9EBB; overflow:hidden; }
+  .item-thumb img { width:90px; height:90px; object-fit:cover; display:block; }
   .item-info { flex:1; min-width:0; }
   .item-type { font-size:16px; font-weight:800; color:#2A1520; }
   .item-meta { font-size:12px; color:var(--muted); font-weight:600; margin-top:3px; display:flex; align-items:center; gap:4px; }
@@ -287,8 +287,9 @@ export default function App() {
         else setClothes([]);
         if (l.data) setLooks(l.data);
         else setLooks([]);
+        setLoading(false);
 
-        // Завантажуємо фото окремо невеликими порціями
+        // Фото завантажуємо у фоні після показу контенту
         if (c.data && c.data.length > 0) {
           const ids = c.data.map(item => item.id);
           const chunkSize = 20;
@@ -308,7 +309,6 @@ export default function App() {
         }
       } catch(e) {
         console.error("Load error:", e);
-      } finally {
         setLoading(false);
       }
     };
