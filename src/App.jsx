@@ -643,6 +643,7 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
               <div className="item-info">
                 <div className="item-type">{item.type}</div>
                 <div className="item-meta"><ColorDot color={item.color} />{item.color}</div>
+                <div className="item-meta">{Array.isArray(item.style) ? item.style.join(", ") : item.style}</div>
                 <div className="item-meta">{item.season}</div>
               </div>
             </div>
