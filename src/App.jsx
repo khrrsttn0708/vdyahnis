@@ -490,7 +490,7 @@ function LoginScreen({ onLogin, showToast }) {
 
 function AddClothingTab({ currentUser, clothes, setClothes, showToast }) {
   const [type, setType]       = useState("Верх");
-  const [styleV, setStyle]    = useState("Університальний");
+  const [styleV, setStyle]    = useState("Універсальний");
   const [season, setSeason]   = useState("Літо");
   const [color, setColor]     = useState("Білий");
   const [photo, setPhoto]     = useState(null);
@@ -575,7 +575,7 @@ function WardrobeTab({ userClothes, clothes, setClothes, showToast }) {
 
   // edit fields
   const [editType, setEditType]     = useState("");
-  const [editStyle, setEditStyle]   = useState("Університальний");
+  const [editStyle, setEditStyle]   = useState("Універсальний");
   const [editSeason, setEditSeason] = useState("");
   const [editColor, setEditColor]   = useState("");
 
